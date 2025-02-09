@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { FaUsers, FaMapMarkerAlt, FaCalendarAlt, FaDollarSign } from "react-icons/fa";
 import { EVENT_DETAILS, JOIN_EVENT } from "../services/Event/event";
+import { REQUEST_URL } from "../data/constant";
 
-const socket = io("http://localhost:5000"); 
+const socket = io(REQUEST_URL); 
 
 const EventDetails = () => {
   const { id } = useParams();

@@ -4,9 +4,10 @@ import withAuth from "../Auth/WithAuth";
 import { FaUsers, FaCalendarAlt, FaMoneyBillWave, FaPlus } from "react-icons/fa";
 import { ALL_EVENTS } from "../../services/Event/event";
 import { io } from "socket.io-client";
+import { REQUEST_URL } from "../../data/constant";
 
 // ✅ WebSocket Connection (initialize only once)
-const socket = io("http://localhost:4000");
+const socket = io(REQUEST_URL);
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ const Dashboard = () => {
       <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold">📅 My Events</h3>
-          <Link to="/create-event" className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg flex items-center">
+          <Link to="/event/create-event" className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg flex items-center">
             <FaPlus className="mr-2" /> Create Event
           </Link>
         </div>

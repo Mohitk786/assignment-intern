@@ -5,44 +5,48 @@ import { getToken } from "../utils/getToken";
 const LandingPage = () => {
   const token = getToken();
   const isAuthenticated = Boolean(token);
-  // const isAuthenticated = true;
+
   return (
-    <div className="flex flex-1 bg-white w-full max-w-[1400px] mx-auto p-6 lg:px-4">
-      {/* hero */}
-      <section className="flex flex-col items-center justify-center gap-10 text-center">
-        <h6 className="text-[0.85rem] lg:text-sm text-gray-400 border border-gray-300 rounded-full px-4 py-2">
-          Want to host an unforgettable event?{" "}
-          <span className="text-green-600 font-medium cursor-pointer">
-            Learn how →
-          </span>
-        </h6>
-        <h1 className="lg:leading-16 text-4xl md:text-5xl lg:text-6xl font-bold">
-          Bringing communities <br /> together🍀
-        </h1>
-        <p className="text-[0.85rem] lg:text-md text-gray-500 md:w-[80%] lg:w-[70%] font-medium">
-          Events are more than just gatherings. They are opportunities to learn,
-          connect, and grow. Whether you're hosting or attending, we make it
-          seamless and engaging. Start planning your next big event today!
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-400 to-blue-500 text-white px-6">
+      <header className="w-full max-w-6xl flex justify-between items-center py-6">
+        <h1 className="text-3xl font-bold">Evently</h1>
+        <nav>
+          <Link to={isAuthenticated ? "/user/dashboard" : "/auth/signup"} className="mr-4 text-lg hover:underline">
+            {isAuthenticated ? "Dashboard" : "Sign Up"}
+          </Link>
+          <Link to={isAuthenticated ? "/event/create-event" : "/auth/signin"} className="text-lg hover:underline">
+            {isAuthenticated ? "Create Event" : "Sign In"}
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <section className="text-center flex flex-col items-center gap-8 mt-12 max-w-3xl">
+        <h2 className="text-5xl font-bold leading-tight">
+          Uniting Communities, One Event at a Time 🎉
+        </h2>
+        <p className="text-lg text-gray-100">
+          Discover, create, and manage events effortlessly. Whether you're hosting or attending,
+          we bring people together for unforgettable experiences.
         </p>
-        <div className="flex gap-5">
-          <Link to={`${isAuthenticated ? "/user/dashboard" : "/auth/signup"}`}>
-            <button className="text-sm bg-green-500 hover:bg-green-600 transition-all px-6 py-3 rounded-md text-white cursor-pointer">
-              {isAuthenticated ? "Explore Events" : "Create Account"}
+        <div className="flex gap-4">
+          <Link to={isAuthenticated ? "/user/dashboard" : "/auth/signup"}>
+            <button className="bg-white text-green-500 hover:bg-gray-100 transition-all px-6 py-3 rounded-lg text-lg font-medium shadow-lg">
+              {isAuthenticated ? "Explore Events" : "Get Started"}
             </button>
           </Link>
-          <Link to={`${isAuthenticated ? "/event/create_event" : "/auth/signin"}`}>
-            <button className="text-sm bg-white hover:bg-gray-200 transition-all px-6 py-3 rounded-md cursor-pointer">
-              {isAuthenticated ? (
-                <>
-                  <i className="ri-add-line" /> Create Event
-                </>
-              ) : (
-                "Sign In"
-              )}
+          <Link to={isAuthenticated ? "/event/create-event" : "/auth/signin"}>
+            <button className="bg-transparent border border-white hover:bg-white hover:text-green-500 transition-all px-6 py-3 rounded-lg text-lg font-medium shadow-lg">
+              {isAuthenticated ? "Create Event" : "Sign In"}
             </button>
           </Link>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="absolute bottom-6 text-sm text-gray-200">
+        &copy; {new Date().getFullYear()} Evently. All Rights Reserved.
+      </footer>
     </div>
   );
 };

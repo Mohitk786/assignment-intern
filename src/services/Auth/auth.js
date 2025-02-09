@@ -1,4 +1,4 @@
-const REQUEST_URL = process.env.REQUEST_URL || "http://localhost:4000"
+import { REQUEST_URL } from '../../data/constant';
 
 export const LOGIN = async (email, password) => {
     try {
