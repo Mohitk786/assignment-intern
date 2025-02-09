@@ -20,30 +20,29 @@ database.connect();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+cors({
+  origin: ["https://assignment-intern-psi.vercel.app"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+})
+// app.use((req, res, next) => {
+//   // Allow requests from your specific domain
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
 
-app.use((req, res, next) => {
-  // Allow requests from your specific domain
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   // Allow credentials (cookies, authorization headers, etc.)
+//   res.header("Access-Control-Allow-Credentials", true);
 
-  // Allow credentials (cookies, authorization headers, etc.)
-  res.header("Access-Control-Allow-Credentials", true);
+//   // Specify allowed methods and headers
+//   res.header("Access-Control-Allow-Methods", "GET, POST");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
 
-  // Specify allowed methods and headers
-  res.header("Access-Control-Allow-Methods", "GET, POST");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-
-  // Continue to the next middleware
-  next();
-});
+//   // Continue to the next middleware
+//   next();
+// });
 
 // File upload configuration
 app.use(
@@ -56,29 +55,21 @@ app.use(
 // Cloudinary connection
 cloudinaryConnect();
 
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
-// Routes
-app.use("/event", eventRoutes);
-app.use("", authRoutes);
-
-app.get("/", (req, res) => {
-  return res.json({
-    success: true,
-    message: "Your server is up and running....",
-  });
-});
-
-// **Create an HTTP server to enable WebSockets**
 const server = http.createServer(app);
-
-// **Initialize Socket.IO**
 
 const io = new Server(server, {
   cors: { origin: "*" },
 });
+
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+
+
+
 
 io.on("connection", (socket) => {
   socket.on("joinEvent", (eventId) => {
@@ -103,6 +94,18 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
+  });
+});
+
+
+// Routes
+app.use("/event", eventRoutes);
+app.use("", authRoutes);
+
+app.get("/", (req, res) => {
+  return res.json({
+    success: true,
+    message: "Your server is up and running....",
   });
 });
 

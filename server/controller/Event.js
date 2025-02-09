@@ -4,32 +4,36 @@ const User = require("../models/User");
 
 exports.createEvent = async (req, res) => {
     try {
-        const { name, description, date, city, category } = req.body;
-        
-        const eventImage = req.files.eventImage;
+        const { title, description, date, city, category, ticketPrice, eventDateTime } = req.body;
+        const eventImage = req?.files?.eventImage;
 
-        const cloudinaryEventImage = await uploadImageToCloudinary(
+        let cloudinaryEventImage = null;
+        if(eventImage) {
+           cloudinaryEventImage = await uploadImageToCloudinary(
             eventImage,
             process.env.CLOUD_FOLDER_NAME
           )
+        }
 
         const newEvent = new Event({
-          name,
+          title,
           description,
-          date,
+          eventDateTime,
           city,
+          ticketPrice,
           category,
-          image: cloudinaryEventImage.secure_url,
-          owner: req.user.id, 
+          image: cloudinaryEventImage?.secure_url,
+          host: req.user.id, 
         });
+
         const event = await newEvent.save();
 
         await User.findByIdAndUpdate(req.user.id, { $push: { events: event.id } });
-
-        res.status(201).json({ message: "Event created successfully", event: newEvent });
+        res.status(201).json({ status:true, message: "Event created successfully" })
+        ;
       } catch (error) {
         console.error("Error creating event:", error);
-        res.status(500).json({ error: "Server error, please try again later." });
+        res.status(500).json({ status:false, error: "Server error, please try again later." });
       }
 }
 
@@ -61,7 +65,7 @@ exports.joinEvent = async (req, res) => {
 
 exports.eventDetails =  async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate("hostName");
+    const event = await Event.findById(req.params.id).populate("host");
     if (!event) return res.status(404).json({ error: "Event not found" });
     
     res.json({
@@ -76,7 +80,7 @@ exports.eventDetails =  async (req, res) => {
 
 exports.allEvents = async (req, res) => { 
   try {
-    const events = await Event.find({}).populate("hostName");
+    const events = await Event.find({}).populate("host");
     res.json({
       data: events
     });
